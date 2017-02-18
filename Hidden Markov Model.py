@@ -46,13 +46,20 @@ def log_joint_prob(x, z):
     return logp
 
 # Return the index of the highet value in list
-def arg_max(l):
+def GetMaxValueIndex(l):
     maxVal, maxIndex = l[0], 0
     for i in range(1, len(l)):
         if l[i] > maxVal:
             maxVal = l[i]
             maxIndex = i
     return maxIndex
+
+def GetMaxValue(l):
+    maxVal = l[0]
+    for i in range(1, len(l)):
+        if l[i] > maxVal:
+            maxVal = l[i]
+    return maxVal
 
 def log(x):
     if x == 0:
@@ -63,39 +70,30 @@ def log(x):
 # Compute most likely sequence given observations. 
 def viterbi_decoding(obs):
         w = []
-         #First(0th) column is calcuated based on initial propabilities and emit probabilities
-         # So it is our initial probabilities + the emission probability of our 0th observation.abs
-         # All three rows are calculated as s will count of 3 times while o will stay at 0
+        #First(0th) column is calcuated based on initial propabilities and emit probabilities
+        # So it is our initial probabilities + the emission probability of our 0th observation
+        # All three rows are calculated as s will count of 3 times while o will stay at 0
+        # Because we are working with log probabilities we use addition instead of multiplication
         w.append(["-inf"] * num_of_states) 
         for st in range(num_of_states):
             w[0][st] = (log(init_probs[st]) + log(emit_probs[st][obs[0]]))
         
-        # ω[k][n] = “minus infinity”
-        #     if p(x[n] | k) != 0:
-        #         for j = 1 to K:
-        #             if p(k | j) != 0:
-        #                 ω^[k][n] = max( ω^[k][n], log(p(x[n] | k)) + ω^[ j ][n-1] + log(p( k | j)) )
-
         #We then initialize the values of the rest of the array
         for o in range(1, len(obs)):
             w.append(["-inf"] * num_of_states) # Each iteration we append a new column with num_of_states as amount of rows
             for s in range(num_of_states):
-                highestPrevVal = float("-inf") # we set a highestPreVal, This needs to be -inf as the log of trans-probs[][] might be as low as -inf
-                #We search we the highestPreVal for the previous column
-                for st in range(num_of_states):
-                    #We go through all probabilities for the states of that column and set it to the highest value
-                    newVal = w[o-1][st] + log(trans_probs[st][s]) 
-                    if(newVal > highestPrevVal):
-                        highestPrevVal = w[o-1][st] + log(trans_probs[st][s]) 
-                #We set the value of the array element [o][s] to emit_probs + the highestPrevVal
-                #we use the emition probability for each state in respect to the state that had the highest probability in the previous column
-                #So basically we take the previous value with the highest probability and add the emission probability for each state.
-                w[o][s] = log(emit_probs[s][obs[o]]) + highestPrevVal
+                #We find the most likely on for each state
+                # This is done by finding the highest probability of each previous step and adding(because log prop).
+                #  This gives su the probabilities  for each state added with the transition probability to go to state s
+                # We then one which is most likely to by getting the max value.
+                highestVal = GetMaxValue([w[o-1][0] + log(trans_probs[0][s]), w[o-1][1] + log(trans_probs[1][s]), w[o-1][2] + log(trans_probs[2][s])])
+                # We then take the highest val and add it to the emit_probs for the state s based on our observations
+                w[o][s] = log(emit_probs[s][obs[o]]) + highestVal
         
         #The table for decoding is now created based on our observations
         # We now backtrack through our table
         z = len(obs) * [None]
-        z[len(z)-1] = arg_max(w[len(z)-1])
+        z[len(z)-1] = GetMaxValueIndex(w[len(z)-1])
         for i in range(len(z)-1, 0, -1):
             for j in range(num_of_states):
                 if w[i-1][j] + log(trans_probs[j][z[i]]) + log(emit_probs[z[i]][obs[i]]) == w[i][z[i]]:
