@@ -82,6 +82,7 @@ def viterbi_decoding(obs):
         for o in range(1, len(obs)):
             w.append(["-inf"] * num_of_states) # Each iteration we append a new column with num_of_states as amount of rows
             for s in range(num_of_states):
+                #This step is desribed on slide 11  of HMM implementation
                 #We find the most likely on for each state
                 # This is done by finding the highest probability of each previous step and adding(because log prop).
                 #  This gives su the probabilities  for each state added with the transition probability to go to state s
@@ -90,19 +91,19 @@ def viterbi_decoding(obs):
                 # We then take the highest val and add it to the emit_probs for the state s based on our observations
                 w[o][s] = log(emit_probs[s][obs[o]]) + highestVal
         
-        #The table for decoding is now created based on our observations
-        # We now backtrack through our table
+        # We now backtrack through the table that we just created.
+        # We create z which will contain the most likely sequence
         z = len(obs) * [None]
         z[len(z)-1] = GetMaxValueIndex(w[len(z)-1])
-        for i in range(len(z)-1, 0, -1):
-            for j in range(num_of_states):
-                if w[i-1][j] + log(trans_probs[j][z[i]]) + log(emit_probs[z[i]][obs[i]]) == w[i][z[i]]:
-                    z[i-1] = j
-                    break
-        # z[1..N] = undef
-        # z[N] = arg maxk ω^[k][N]
-        # for n = N-1 to 1:
-        #     z[n] = arg maxk( log p(x[n+1] | z[n+1]) + ω^[k][n] + log p(z[n+1] | k ) )
+        
+         #This step is desribed on slide 12 of HMM implementation
+         #We backtrack pretty much the same way as we created the table
+         # We find the max value of the previous
+        for n in range(len(obs)-2, -1, -1):
+            z[n] = GetMaxValueIndex([log(emit_probs[z[n+1]][obs[n+1]]) + w[n][0] + log(trans_probs[0][z[n+1]]), 
+                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][1] + log(trans_probs[1][z[n+1]]), 
+                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][2] + log(trans_probs[2][z[n+1]])])
+       
         return z, w[-1][z[-1]]
             
 
@@ -124,7 +125,9 @@ Lzz = [states[c] for c in Lz]
 z, logpz = viterbi_decoding(Lxx)
 
 # Output the results
+print "Viterbi path z:", string.join([index_to_states[c] for c in z]) 
 print "Viterbi path z:", string.join([index_to_states[c] for c in Lzz]) 
+
 print "loglikelihood of z:", logpz
 print "Joint loglikelihood of (x,z):", log_joint_prob(Lxx, Lzz)
 
