@@ -106,10 +106,6 @@ def viterbi_decoding(obs):
        
         return z, w[-1][z[-1]]
             
-
-            
- 
-    
 for recordX in SeqIO.parse ("xval.txt", "fasta"):
     Lx = list(recordX)
 
@@ -119,19 +115,17 @@ for recordZ in SeqIO.parse ("zval.txt", "fasta"):
 Lxx = [observables[c] for c in Lx]
 Lzz = [states[c] for c in Lz]
 
-#viterbi_decoding(Lxx)
-
 # Compute Viterbi decoding and its loglikelihood
 z, logpz = viterbi_decoding(Lxx)
 
-# Output the results
+# Print out the decoded sequence
 print "Viterbi path z:", string.join([index_to_states[c] for c in z]) 
-print "Viterbi path z:", string.join([index_to_states[c] for c in Lzz]) 
 
-print "loglikelihood of z:", logpz
-print "Joint loglikelihood of (x,z):", log_joint_prob(Lxx, Lzz)
+# Check if we decoded correctly
+if (string.join([index_to_states[c] for c in z]) == string.join([index_to_states[c] for c in Lzz])):
+    print "We decoded correctly! hurra", 
+else:
+    print "We did not Decode correctly! shit!", 
 
-
-print(joint_prob(Lxx, Lzz))
-print(log_joint_prob(Lxx,Lzz))
-
+print "The log likelihood of the decoded z:", logpz
+print "Joint log likelihood of (x,z):", log_joint_prob(Lxx, z)
