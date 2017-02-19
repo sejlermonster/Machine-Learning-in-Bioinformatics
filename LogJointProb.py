@@ -25,3 +25,11 @@ def log_joint_prob(x, z):
 
 for recordX in SeqIO.parse ("xval.txt", "fasta"):
     Lx = list(recordX)
+
+for recordZ in SeqIO.parse ("zval.txt", "fasta"):
+    Lz = list(recordZ)
+
+Lxx = [observables[c] for c in Lx]
+Lzz = [states[c] for c in Lz]
+
+print(log_joint_prob(Lxx, Lzz))
