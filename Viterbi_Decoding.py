@@ -23,8 +23,5 @@ def log_joint_prob(x, z):
         logp = logp + math.log(trans_probs[z[i - 1]][z[i]]) + math.log(emit_probs[z[i]][x[i]])
     return logp
 
-def viterbi_decoding(x):
-
-
 for recordX in SeqIO.parse ("xval.txt", "fasta"):
     Lx = list(recordX)
