@@ -105,7 +105,7 @@ def viterbi_decoding(obs):
             z[n] = GetMaxValueIndex([log(emit_probs[z[n+1]][obs[n+1]]) + w[n][0] + log(trans_probs[0][z[n+1]]), 
                                      log(emit_probs[z[n+1]][obs[n+1]]) + w[n][1] + log(trans_probs[1][z[n+1]]),
                                      log(emit_probs[z[n+1]][obs[n+1]]) + w[n][2] + log(trans_probs[2][z[n+1]])])
-
+# We return the decoded(z) and we return the last column of w and the index of the last element in z
         return z, w[-1][z[-1]]
             
 for recordX in SeqIO.parse ("xval.txt", "fasta"):
@@ -129,5 +129,5 @@ if (string.join([index_to_states[c] for c in z]) == string.join([index_to_states
 else:
     print "We did not Decode correctly! shit!", 
 
-print "The log likelihood of the decoded z:", logpz
-print "Joint log likelihood of (x,z):", log_joint_prob(Lxx, z)
+print "The log probability of the decoded z:", logpz
+print "Joint log probability of (x,z):", log_joint_prob(Lxx, z)
