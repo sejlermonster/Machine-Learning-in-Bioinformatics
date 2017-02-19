@@ -25,21 +25,8 @@ emit_probs = [[0.043601, 0.011814, 0.053446, 0.065541, 0.049508, 0.049789, 0.054
               [0.082374, 0.008415, 0.059345, 0.059345, 0.069973, 0.031001, 0.049159, 0.019043, 0.081045, 0.025244, 0.068202, 0.047830, 0.032772, 0.052259, 0.073959, 0.086802, 0.056244, 0.007086, 0.062445, 0.027458]]
 
 
-def joint_prob(x, z):
-    """
-    Returns the joint probability of x and z
-    """
-    p = init_probs[z[0]] * emit_probs[z[0]][x[0]]
-    for i in range(1, len(x)):
-        p = p * trans_probs[z[i - 1]][z[i]] * emit_probs[z[i]][x[i]]
-
-    return p
-
-
+#Return the log joint probab
 def log_joint_prob(x, z):
-    """
-    Returns the log transformed joint probability of x and z
-    """
     logp = math.log(init_probs[z[0]]) + math.log(emit_probs[z[0]][x[0]])
     for i in range(1, len(x)):
         logp = logp + math.log(trans_probs[z[i - 1]][z[i]]) + math.log(emit_probs[z[i]][x[i]])
@@ -54,6 +41,7 @@ def GetMaxValueIndex(l):
             maxIndex = i
     return maxIndex
 
+# Returns the highest value in the list
 def GetMaxValue(l):
     maxVal = l[0]
     for i in range(1, len(l)):
