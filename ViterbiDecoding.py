@@ -74,7 +74,7 @@ def viterbi_decoding(obs):
                 #This step is desribed on slide 11  of HMM implementation
                 #We find the most likely on for each state
                 # This is done by finding the highest probability of each previous step and adding(because log prop).
-                #  This gives su the probabilities  for each state added with the transition probability to go to state s
+                # This gives su the probabilities  for each state added with the transition probability to go to state s
                 # We then one which is most likely to by getting the max value.
                 highestVal = GetMaxValue([w[o-1][0] + log(trans_probs[0][s]),
                                           w[o-1][1] + log(trans_probs[1][s]),
@@ -87,8 +87,9 @@ def viterbi_decoding(obs):
         z = len(obs) * [None]
         z[len(z)-1] = GetMaxValueIndex(w[len(z)-1])
         
-         #This step is desribed on slide 12 of HMM implementation
-         #We backtrack pretty much the same way as we created the table
+         # This step is desribed on slide 12 of HMM implementation
+         # We have the nth row of w and find the probability for each. We add the tranistion probability of 
+         # transitioning to the z nth+1 state
          # We find the max value of the previous
         for n in range(len(obs)-2, -1, -1):
             z[n] = GetMaxValueIndex([log(emit_probs[z[n+1]][obs[n+1]]) + w[n][0] + log(trans_probs[0][z[n+1]]), 
