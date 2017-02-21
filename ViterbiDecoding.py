@@ -14,6 +14,7 @@ index_to_states = {0:'i', 1: 'M', 2: 'o'}
 
 # Transition probabiliy. This describes the probabaity of changing state given a state
 # So in general we can see that if we observe a state there is a high probability we will stay in that state.
+#Also we can see that we cannot go from state i(inside) to o(outside) we can only go through state M(membrane)
 trans_probs = [[0.990971, 0.009029, 0.000000],
                [0.023083, 0.953090, 0.023827],
                [0.000000, 0.013759, 0.986241]]
