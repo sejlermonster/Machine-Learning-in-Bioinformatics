@@ -105,7 +105,7 @@ for recordZ in SeqIO.parse ("zval.txt", "fasta"):
 Lxx = [observables[c] for c in Lx]
 Lzz = [states[c] for c in Lz]
 
-# Compute Viterbi decoding and its loglikelihood
+# Compute Viterbi decoding and its log probabilty
 z, logpz = viterbi_decoding(Lxx)
 
 # Print out the decoded sequence
@@ -117,5 +117,6 @@ if (string.join([index_to_states[c] for c in z]) == string.join([index_to_states
 else:
     print "We did not Decode correctly! shit!", 
 
+#Print out log probabilty calcualted by viterbi and by log_joint_prob function
 print "The log probability of the decoded z:", logpz
 print "Joint log probability of (x,z):", log_joint_prob(Lxx, z)
