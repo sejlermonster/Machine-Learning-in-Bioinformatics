@@ -60,8 +60,8 @@ def log(x):
 def viterbi_decoding(obs):
         w = []
         #First(0th) column is calcuated based on initial propabilities and emit probabilities
-        # So it is our initial probabilities + the emission probability of our 0th observation
-        # All three rows are calculated as s will count of 3 times while o will stay at 0
+        # So it is our initial probabilities + the emission probabilities of our 0th observation
+        # All three rows are calculated as s will count up 3 times
         # Because we are working with log probabilities we use addition instead of multiplication
         w.append(["-inf"] * num_of_states) 
         for st in range(num_of_states):
@@ -71,11 +71,10 @@ def viterbi_decoding(obs):
         for o in range(1, len(obs)):
             w.append(["-inf"] * num_of_states) # Each iteration we append a new column with num_of_states as amount of rows
             for s in range(num_of_states):
-                #This step is desribed on slide 11  of HMM implementation
-                #We find the most likely on for each state
-                # This is done by finding the highest probability of each previous step and adding(because log prop).
-                # This gives su the probabilities  for each state added with the transition probability to go to state s
-                # We then one which is most likely to by getting the max value.
+                #This step is described on slide 11  of HMM implementation
+                # We find the most likely on for each state
+                # We look at the three previous probabilities and add the transition probability for going to state s
+                # in that way we find the highest probability of going to state s.
                 highestVal = GetMaxValue([w[o-1][0] + log(trans_probs[0][s]),
                                           w[o-1][1] + log(trans_probs[1][s]),
                                           w[o-1][2] + log(trans_probs[2][s])])
@@ -98,9 +97,11 @@ def viterbi_decoding(obs):
 # We return the decoded(z) and we return the last column of w and the index of the last element in z
         return z, w[-1][z[-1]]
             
+#We load in our data. 
 for recordX in SeqIO.parse ("xval.txt", "fasta"):
     Lx = list(recordX)
 
+#We load in our z for the test data, if we run it on the test data, or else ucomment this
 for recordZ in SeqIO.parse ("zval.txt", "fasta"):
     Lz = list(recordZ)
 
@@ -113,7 +114,7 @@ z, logpz = viterbi_decoding(Lxx)
 # Print out the decoded sequence
 print "Viterbi path z:", string.join([index_to_states[c] for c in z]) 
 
-# Check if we decoded correctly
+# Check if we decoded correctly. This should be uncommented if we are not dealing with test data.
 if (string.join([index_to_states[c] for c in z]) == string.join([index_to_states[c] for c in Lzz])):
     print "We decoded correctly! hurra", 
 else:
