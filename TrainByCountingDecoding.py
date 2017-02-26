@@ -179,9 +179,10 @@ for i in range(len(Lxx)):
     count(Lxx[i], Lzz[i])
 Normalize()
 
-z, prop = viterbi_decoding(Lxx[0])
-print "Viterbi path X:", string.join([index_to_observables[c] for c in Lxx[0]]).replace(" ", "")
+#for i in range(16):
+z, prop = viterbi_decoding(Lxx[i])
 print "Viterbi path z:", string.join([index_to_states[c] for c in z]).replace(" ", "")
+print "Viterbi path X:", string.join([index_to_observables[c] for c in Lxx[i]]).replace(" ", "")
 
 print(init_probs)
 print(trans_probs)
