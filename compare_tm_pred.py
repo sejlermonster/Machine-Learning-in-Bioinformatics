@@ -89,3 +89,5 @@ def Compare(true, pred):
 
     print "Summary (over all sequences):"
     print_stats(total_tp, total_fp, total_tn, total_fn)
+
+Compare("TraningDataFolds/fold10.txt", "results/result.9.txt")
