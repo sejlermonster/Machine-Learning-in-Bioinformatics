@@ -159,25 +159,25 @@ fastaData = []
 fastaData.append(fasta("TrainingData/set160.0.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.1.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.2.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.3.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.4.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.5.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.6.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.7.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
-# fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.3.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.4.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.5.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.6.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.7.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
 
 fastaData2 = []
 fastaData2.append(fasta("TrainingData/set160.0.labels.txt"))
 fastaData2.append(fasta("TrainingData/set160.1.labels.txt"))
 fastaData2.append(fasta("TrainingData/set160.2.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.3.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.4.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.5.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.6.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.7.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.8.labels.txt"))
-# fastaData2.append(fasta("TrainingData/set160.9.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.3.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.4.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.5.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.6.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.7.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.8.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.9.labels.txt"))
 
 Lxx = []
 Lzz = []
@@ -213,7 +213,7 @@ f.close()
 
 
 
-
+print "done"
 
 #print(init_probs)
 #print(trans_probs)
