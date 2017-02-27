@@ -1,9 +1,11 @@
 from Bio import SeqIO
 import math
 import string
+from ViterbiDecoding import viterbi_decoding
+from compare_tm_pred import Compare
 
 observables = {'A':0, 'C':1, 'E':2, 'D':3, 'G':4, 'F':5, 'I':6, 'H':7, 'K':8, 'M':9, 'L':10, 'N':11, 'Q':12, 'P':13, 'S':14, 'R':15, 'T':16, 'W':17, 'V':18, 'Y':19 }
-
+index_to_observables = { 0:'A', 1:'C', 2:'E', 3:'D', 4:'G', 5:'F', 6:'I', 7:'H', 8:'K', 9:'M', 10:'L', 11:'N', 12:'Q', 13:'P', 14:'S', 15:'R', 16:'T', 17:'W', 18:'V', 19:'Y'}
 # Our initial propbabilities for the three different states
 init_props = [0.0, 0.0, 0.0, 0.0]
 #Our three different states
@@ -115,7 +117,6 @@ def Normalize():
             trans_probs[i][j] = trans_probs[i][j]/TotalTransCount
 
 fastaData = []
-# fastaData.append(fasta("TrainingData/set160.0.labelsX.txt").values())
 fastaData.append(fasta("TrainingData/set160.0.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.1.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.2.labels.txt").values())
@@ -125,6 +126,7 @@ fastaData.append(fasta("TrainingData/set160.5.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.6.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.7.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
+fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
 
 Lxx = []
 Lzz = []
@@ -138,7 +140,38 @@ for i in range(len(Lxx)):
     count(Lxx[i], Lzz[i])
 Normalize()
 
+count = 0
+fileCount = 0
+resultName = "results/result." + str(len(fastaData)-1)
+f = open(resultName + ".txt", 'w')
 
-print(init_props)
-print(trans_probs)
-print(emit_probs)
+fastaData2 = []
+fastaData2.append(fasta("TrainingData/set160.0.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.1.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.2.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.3.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.4.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.5.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.6.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.7.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.8.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.9.labels.txt"))
+
+for l in fastaData2:
+    for key in l:
+        for x in Lxx:
+            if ((string.join([index_to_observables[c] for c in x]).replace(" ", "")) == l[key][0]):
+                z, prop = viterbi_decoding(x)
+                f.write(">" + key)
+                f.write("\n")
+                f.write("  ")
+                f.write(string.join([index_to_observables[c] for c in x]).replace(" ", ""))
+                f.write("\n")
+                f.write('# ')
+                f.write(string.join([index_to_states[c] for c in z]).replace(" ", "")) 
+                f.write("\n")
+                f.write("\n")
+f.close()
+
+
+Compare("TraningDataFolds/fold10.txt", "results/result." + str(len(fastaData)-1) + ".txt")

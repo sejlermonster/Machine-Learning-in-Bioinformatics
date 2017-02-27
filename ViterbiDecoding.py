@@ -97,29 +97,29 @@ def viterbi_decoding(obs):
 # We return the decoded(z) and we return the last column of w and the index of the last element in z
         return z, w[-1][z[-1]]
             
-#We load in our data. 
-for recordX in SeqIO.parse ("xval.txt", "fasta"):
-    Lx = list(recordX)
+# #We load in our data. 
+# for recordX in SeqIO.parse ("xval.txt", "fasta"):
+#     Lx = list(recordX)
 
-#We load in our z for the test data, if we run it on the test data, or else ucomment this
-for recordZ in SeqIO.parse ("zval.txt", "fasta"):
-    Lz = list(recordZ)
+# #We load in our z for the test data, if we run it on the test data, or else ucomment this
+# for recordZ in SeqIO.parse ("zval.txt", "fasta"):
+#     Lz = list(recordZ)
 
-Lxx = [observables[c] for c in Lx]
-Lzz = [states[c] for c in Lz]
+# Lxx = [observables[c] for c in Lx]
+# Lzz = [states[c] for c in Lz]
 
-# Compute Viterbi decoding and its log probabilty
-z, logpz = viterbi_decoding(Lxx)
+# # Compute Viterbi decoding and its log probabilty
+# z, logpz = viterbi_decoding(Lxx)
 
-# Print out the decoded sequence
-print "Viterbi path z:", string.join([index_to_states[c] for c in z]) 
+# # Print out the decoded sequence
+# print "Viterbi path z:", string.join([index_to_states[c] for c in z]) 
 
-# Check if we decoded correctly. This should be uncommented if we are not dealing with test data.
-if (string.join([index_to_states[c] for c in z]) == string.join([index_to_states[c] for c in Lzz])):
-    print "We decoded correctly! hurra", 
-else:
-    print "We did not Decode correctly! shit!", 
+# # Check if we decoded correctly. This should be uncommented if we are not dealing with test data.
+# if (string.join([index_to_states[c] for c in z]) == string.join([index_to_states[c] for c in Lzz])):
+#     print "We decoded correctly! hurra", 
+# else:
+#     print "We did not Decode correctly! shit!", 
 
-#Print out log probabilty calcualted by viterbi and by log_joint_prob function
-print "The log probability of the decoded z:", logpz
-print "Joint log probability of (x,z):", log_joint_prob(Lxx, z)
+# #Print out log probabilty calcualted by viterbi and by log_joint_prob function
+# print "The log probability of the decoded z:", logpz
+# print "Joint log probability of (x,z):", log_joint_prob(Lxx, z)
