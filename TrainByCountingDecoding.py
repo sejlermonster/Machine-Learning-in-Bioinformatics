@@ -159,14 +159,25 @@ fastaData = []
 fastaData.append(fasta("TrainingData/set160.0.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.1.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.2.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.3.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.4.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.5.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.6.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.7.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
-#fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.3.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.4.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.5.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.6.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.7.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
+# fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
 
+fastaData2 = []
+fastaData2.append(fasta("TrainingData/set160.0.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.1.labels.txt"))
+fastaData2.append(fasta("TrainingData/set160.2.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.3.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.4.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.5.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.6.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.7.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.8.labels.txt"))
+# fastaData2.append(fasta("TrainingData/set160.9.labels.txt"))
 
 Lxx = []
 Lzz = []
@@ -179,11 +190,35 @@ for i in range(len(Lxx)):
     count(Lxx[i], Lzz[i])
 Normalize()
 
-#for i in range(16):
-z, prop = viterbi_decoding(Lxx[i])
-print "Viterbi path z:", string.join([index_to_states[c] for c in z]).replace(" ", "")
-print "Viterbi path X:", string.join([index_to_observables[c] for c in Lxx[i]]).replace(" ", "")
+count = 0
+fileCount = 0
+resultName = "results/result." + str(len(fastaData)-1)
+f = open(resultName + ".txt", 'w')
 
-print(init_probs)
-print(trans_probs)
-print(emit_probs)
+for l in fastaData2:
+    for key in l:
+        for x in Lxx:
+            if ((string.join([index_to_observables[c] for c in x]).replace(" ", "")) == l[key][0]):
+                z, prop = viterbi_decoding(x)
+                f.write(">" + key)
+                f.write("\n")
+                f.write("  ")
+                f.write(string.join([index_to_observables[c] for c in x]).replace(" ", ""))
+                f.write("\n")
+                f.write('# ')
+                f.write(string.join([index_to_states[c] for c in z]).replace(" ", "")) 
+                f.write("\n")
+                f.write("\n")
+f.close()
+
+
+
+
+
+#print(init_probs)
+#print(trans_probs)
+#print(emit_probs)
+
+
+
+
