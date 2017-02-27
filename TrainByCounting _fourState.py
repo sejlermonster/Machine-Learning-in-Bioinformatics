@@ -5,7 +5,7 @@ import string
 observables = {'A':0, 'C':1, 'E':2, 'D':3, 'G':4, 'F':5, 'I':6, 'H':7, 'K':8, 'M':9, 'L':10, 'N':11, 'Q':12, 'P':13, 'S':14, 'R':15, 'T':16, 'W':17, 'V':18, 'Y':19 }
 
 # Our initial propbabilities for the three different states
-init_props = [0, 0, 0, 0]
+init_props = [0.0, 0.0, 0.0, 0.0]
 #Our three different states
 states = {'i':0, 'M':1, 'o':2, 'm':3}
 num_of_states = 4
@@ -115,6 +115,7 @@ def Normalize():
             trans_probs[i][j] = trans_probs[i][j]/TotalTransCount
 
 fastaData = []
+# fastaData.append(fasta("TrainingData/set160.0.labelsX.txt").values())
 fastaData.append(fasta("TrainingData/set160.0.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.1.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.2.labels.txt").values())
@@ -131,7 +132,7 @@ for i in range(len(fastaData)):
     for j in range(len(fastaData[i])):
         Lxx.append(list(observables[c] for c in fastaData[i][j][0]))
         Lzz.append(list(states[c] for c in fastaData[i][j][1]))
-    Lzz[i] = StateTranslater(Lzz[i])
+        Lzz[j+(i*len(fastaData[i]))] = StateTranslater(Lzz[j+(i*len(fastaData[i]))])
     
 for i in range(len(Lxx)):
     count(Lxx[i], Lzz[i])
