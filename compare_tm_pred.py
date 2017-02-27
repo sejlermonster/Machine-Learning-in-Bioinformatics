@@ -68,8 +68,8 @@ def print_stats(tp, fp, tn, fn):
     print("Sn = %.4f, Sp = %.4f, CC = %.4f, AC = %.4f" % (sn, sp, cc, ac))
 
 def Compare(true, pred):
-    # true = fasta("TrainingData/set160.0.labels.txt")
-    # pred = fasta("TrainingData/set160.0.labels.result.txt")
+    true = fasta(true)
+    pred = fasta(pred)
 
     total_tp, total_fp, total_tn, total_fn = 0, 0, 0, 0
 
