@@ -1,7 +1,6 @@
 from Bio import SeqIO
 import math
 import string
-from ViterbiDecoding import viterbi_decoding
 from compare_tm_pred import Compare
 
 observables = {'A':0, 'C':1, 'E':2, 'D':3, 'G':4, 'F':5, 'I':6, 'H':7, 'K':8, 'M':9, 'L':10, 'N':11, 'Q':12, 'P':13, 'S':14, 'R':15, 'T':16, 'W':17, 'V':18, 'Y':19 }
@@ -28,6 +27,35 @@ emit_probs = [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
               [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+
+#Return the log joint probab
+def log_joint_prob(x, z):
+    logp = math.log(init_props[z[0]]) + math.log(emit_probs[z[0]][x[0]])
+    for i in range(1, len(x)):
+        logp = logp + math.log(trans_probs[z[i - 1]][z[i]]) + math.log(emit_probs[z[i]][x[i]])
+    return logp
+
+# Return the index of the highet value in list
+def GetMaxValueIndex(l):
+    maxVal, maxIndex = l[0], 0
+    for i in range(1, len(l)):
+        if l[i] > maxVal:
+            maxVal = l[i]
+            maxIndex = i
+    return maxIndex
+
+def GetMaxValue(l):
+    maxVal = l[0]
+    for i in range(1, len(l)):
+        if l[i] > maxVal:
+            maxVal = l[i]
+    return maxVal
+
+def log(x):
+    if x == 0:
+        return float("-inf")
+    else:
+        return math.log(x)
 
 def CheckNextObservationChange(lzz, index):
     currVal = lzz[index]
@@ -84,6 +112,47 @@ def fasta(f):
     
     return d
 
+# Compute most likely sequence given observations. 
+def viterbi_decoding(obs):
+        w = []
+        #First(0th) column is calcuated based on initial propabilities and emit probabilities
+        # So it is our initial probabilities + the emission probabilities of our 0th observation
+        # All three rows are calculated as s will count up 3 times
+        # Because we are working with log probabilities we use addition instead of multiplication
+        w.append(["-inf"] * num_of_states) 
+        for st in range(num_of_states):
+            w[0][st] = (log(init_props[st]) + log(emit_probs[st][obs[0]]))
+
+        #We then initialize the values of the rest of the array
+        for o in range(1, len(obs)):
+            w.append(["-inf"] * num_of_states) # Each iteration we append a new column with num_of_states as amount of rows
+            for s in range(num_of_states):
+                #This step is described on slide 11  of HMM implementation
+                # We find the most likely on for each state
+                # We look at the three previous probabilities and add the transition probability for going to state s
+                # in that way we find the highest probability of going to state s.
+                highestVal = GetMaxValue([w[o-1][0] + log(trans_probs[0][s]),
+                                          w[o-1][1] + log(trans_probs[1][s]),
+                                          w[o-1][2] + log(trans_probs[2][s])])
+                # We then take the highest val and add it to the emit_probs for the state s based on our observations
+                w[o][s] = log(emit_probs[s][obs[o]]) + highestVal
+
+        # We now backtrack through the table that we just created.
+        # We create z which will contain the most likely sequence
+        z = len(obs) * [None]
+        z[len(z)-1] = GetMaxValueIndex(w[len(z)-1])
+        
+         # This step is desribed on slide 12 of HMM implementation
+         # We have the nth row of w and find the probability for each. We add the tranistion probability of 
+         # transitioning to the z nth+1 state
+         # We find the max value of the previous
+        for n in range(len(obs)-2, -1, -1):
+            z[n] = GetMaxValueIndex([log(emit_probs[z[n+1]][obs[n+1]]) + w[n][0] + log(trans_probs[0][z[n+1]]), 
+                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][1] + log(trans_probs[1][z[n+1]]),
+                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][2] + log(trans_probs[2][z[n+1]])])
+# We return the decoded(z) and we return the last column of w and the index of the last element in z
+        return z, w[-1][z[-1]]
+
 def count(x, z):
     for i in range(0, len(x)):
         #Counting for initial propability
@@ -126,7 +195,6 @@ fastaData.append(fasta("TrainingData/set160.5.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.6.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.7.labels.txt").values())
 fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
-fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
 
 Lxx = []
 Lzz = []
@@ -146,32 +214,22 @@ resultName = "results/result." + str(len(fastaData)-1)
 f = open(resultName + ".txt", 'w')
 
 fastaData2 = []
-fastaData2.append(fasta("TrainingData/set160.0.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.1.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.2.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.3.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.4.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.5.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.6.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.7.labels.txt"))
-fastaData2.append(fasta("TrainingData/set160.8.labels.txt"))
 fastaData2.append(fasta("TrainingData/set160.9.labels.txt"))
 
 for l in fastaData2:
     for key in l:
-        for x in Lxx:
-            if ((string.join([index_to_observables[c] for c in x]).replace(" ", "")) == l[key][0]):
-                z, prop = viterbi_decoding(x)
-                f.write(">" + key)
-                f.write("\n")
-                f.write("  ")
-                f.write(string.join([index_to_observables[c] for c in x]).replace(" ", ""))
-                f.write("\n")
-                f.write('# ')
-                f.write(string.join([index_to_states[c] for c in z]).replace(" ", "")) 
-                f.write("\n")
-                f.write("\n")
+        z, prop = viterbi_decoding(list(observables[c] for c in l[key][0]))
+        f.write(">" + key)
+        f.write("\n")
+        f.write("  ")
+        f.write(l[key][0])
+        f.write("\n")
+        f.write('# ')
+        f.write(string.join([index_to_states[c] for c in z]).replace(" ", "")) 
+        f.write("\n")
+        f.write("\n")
+
 f.close()
 
 
-Compare("TraningDataFolds/fold10.txt", "results/result." + str(len(fastaData)-1) + ".txt")
+Compare("TrainingData/set160.9.labels.txt", "results/result." + str(len(fastaData)-1) + ".txt")
