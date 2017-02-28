@@ -210,7 +210,7 @@ Normalize()
 
 count = 0
 fileCount = 0
-resultName = "results/result." + str(len(fastaData)-1)
+resultName = "results/4state/result." + str(len(fastaData)-1)
 f = open(resultName + ".txt", 'w')
 
 fastaData2 = []
@@ -232,4 +232,4 @@ for l in fastaData2:
 f.close()
 
 
-Compare("TrainingData/set160.9.labels.txt", "results/result." + str(len(fastaData)-1) + ".txt")
+Compare("TrainingData/set160.9.labels.txt", "results/4state/result." + str(len(fastaData)-1) + ".txt")

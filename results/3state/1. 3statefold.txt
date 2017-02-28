@@ -1,0 +1,35 @@
+Fold 1:
+Summary (over all sequences):
+Sn = 0.6313, Sp = 0.7691, CC = 0.6037, AC = 0.6051
+
+Fold 2:
+Summary (over all sequences):
+Sn = 0.7450, Sp = 0.7667, CC = 0.6708, AC = 0.6709
+
+Fold 3:
+Summary (over all sequences):
+Sn = 0.8353, Sp = 0.7749, CC = 0.7318, AC = 0.7320
+
+Fold 4:
+Summary (over all sequences):
+Sn = 0.8904, Sp = 0.7538, CC = 0.7488, AC = 0.7498
+
+Fold 5:
+Summary (over all sequences):
+Sn = 0.8904, Sp = 0.7613, CC = 0.7549, AC = 0.7557
+
+Fold 6:
+Summary (over all sequences):
+Sn = 0.8753, Sp = 0.7542, CC = 0.7399, AC = 0.7407
+
+Fold 7:
+Summary (over all sequences):
+Sn = 0.8753, Sp = 0.7537, CC = 0.7395, AC = 0.7403
+
+Fold 8:
+Summary (over all sequences):
+Sn = 0.9076, Sp = 0.7622, CC = 0.7661, AC = 0.7671
+
+Fold 9:
+Summary (over all sequences):
+Sn = 0.9242, Sp = 0.7546, CC = 0.7701, AC = 0.7715
