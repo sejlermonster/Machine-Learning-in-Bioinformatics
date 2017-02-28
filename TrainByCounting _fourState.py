@@ -133,7 +133,8 @@ def viterbi_decoding(obs):
                 # in that way we find the highest probability of going to state s.
                 highestVal = GetMaxValue([w[o-1][0] + log(trans_probs[0][s]),
                                           w[o-1][1] + log(trans_probs[1][s]),
-                                          w[o-1][2] + log(trans_probs[2][s])])
+                                          w[o-1][2] + log(trans_probs[2][s]),
+                                          w[o-1][3] + log(trans_probs[3][s])])
                 # We then take the highest val and add it to the emit_probs for the state s based on our observations
                 w[o][s] = log(emit_probs[s][obs[o]]) + highestVal
 
@@ -149,7 +150,8 @@ def viterbi_decoding(obs):
         for n in range(len(obs)-2, -1, -1):
             z[n] = GetMaxValueIndex([log(emit_probs[z[n+1]][obs[n+1]]) + w[n][0] + log(trans_probs[0][z[n+1]]), 
                                      log(emit_probs[z[n+1]][obs[n+1]]) + w[n][1] + log(trans_probs[1][z[n+1]]),
-                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][2] + log(trans_probs[2][z[n+1]])])
+                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][2] + log(trans_probs[2][z[n+1]]),
+                                     log(emit_probs[z[n+1]][obs[n+1]]) + w[n][3] + log(trans_probs[3][z[n+1]])])
 # We return the decoded(z) and we return the last column of w and the index of the last element in z
         return z, w[-1][z[-1]]
 
