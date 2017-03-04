@@ -156,9 +156,9 @@ def viterbi_decoding(obs):
         return z, w[-1][z[-1]]
 
 def count(x, z):
+    #Counting for initial propability
+    init_props[z[0]] += 1
     for i in range(0, len(x)):
-        #Counting for initial propability
-        init_props[z[i]] += 1
         #Counting emission probability
         emit_probs[z[i]][x[i]] += 1
         #Count transition probabilities

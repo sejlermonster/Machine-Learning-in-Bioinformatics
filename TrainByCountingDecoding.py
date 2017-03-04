@@ -125,9 +125,9 @@ def fasta(f):
     return d
 
 def count(x, z):
+    #Counting for initial propability
+    init_probs[z[0]] += 1
     for i in range(0, len(x)):
-        #Counting for initial propability
-        init_probs[z[i]] += 1
         #Counting emission probability
         emit_probs[z[i]][x[i]] += 1
         #Count transition probabilities
@@ -169,15 +169,6 @@ fastaData.append(fasta("TrainingData/set160.8.labels.txt").values())
 #fastaData.append(fasta("TrainingData/set160.9.labels.txt").values())
 
 fastaData2 = []
-#fastaData2.append(fasta("TrainingData/set160.0.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.1.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.2.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.3.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.4.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.5.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.6.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.7.labels.txt"))
-#fastaData2.append(fasta("TrainingData/set160.8.labels.txt"))
 fastaData2.append(fasta("TrainingData/set160.9.labels.txt"))
 
 Lxx = []
